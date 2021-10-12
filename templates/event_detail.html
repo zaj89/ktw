@@ -1,0 +1,29 @@
+{% extends 'index.html' %}
+{% block title %}Lista wydarzeń{% endblock %}
+
+{% block content %}
+                    <center><h2><a class="caption-link btn btn-default" href="{% url 'event_detail' event.id %}"><b>{{ event.name }}</b></a></h2></center>
+              <br>
+                    <div>
+
+                                  {% if event.poster %}<center><img class="fotocats img-responsive" width="520" height="391" src="{{ event.poster.url }}" alt="img"></center><br>{% endif %}
+
+
+                </div>
+              </div>
+              <div class="cell-md-5 cell-xl-2 cell-xs-middle offset-top-40 offset-md-top-0">
+                <div class="range">
+                  <div class="cell-md-12 cell-sm-4">
+                    <div class="inset-xl-left-40">
+                        <p class="tekstline">Data: {{ event.date }}</p>
+                        <p class="tekstline">Miasto: {{ event.city }}</p>
+                        <p class="tekstline">Opis: {{ event.description }}</p>
+                        <p class="tekstline">Rejestracja: {{ event.registration }}</p>
+                        <p class="tekstline">Uczestnicy: {{ event.Liczba_Uczestników }}</p>
+                        {% if event.registration == 'Otwarta'  %}<p class="tektline"><a href="{% url 'event_detail' event.id %}"><button class="btn btn-default">Zapisz się!</button></a></p>{% endif %}
+                    </div>
+                    </div>
+                  </div>
+
+<br>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Zgłoś auto{% endblock %}
+
+{% block content %}
+                  <h4>Zadeklarowałaś przyjazd autem w {{ event.edition }} Edycji wydarzenia {{ event.name }}</h4>
+                  <p>Wróć do <a class="caption-link btn btn-default" href="{% url 'dashboard' %}">panelu</a> kursanta.</p>
+
+
+
+{% endblock %}

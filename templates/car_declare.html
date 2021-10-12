@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Zgłoś auto{% endblock %}
+
+{% block content %}
+                    <form method="POST">
+                        {% csrf_token %}
+        {{ car_form|crispy }}
+<input type="submit" value="Zgłoś auto" class="caption-link btn btn-default"/>
+</form>
+<br>
+{% endblock %}

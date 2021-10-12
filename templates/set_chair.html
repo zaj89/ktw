@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+{% load templatetags %}
+{% load crispy_forms_tags %}
+{% block title %}Zgłoś auto{% endblock %}
+
+{% block content %}
+                  <h4>Aktualnie dostępne miejsca w miastach:</h4>
+<br>
+{% for city in cities %}
+<h4>{{ city }}</h4>
+<hr>
+            {% for car in cars %}
+                {% if car.owner.profile.city == city %}
+                <br>
+<a class="caption-link btn btn-default" href="{% url 'profile' car.owner.id %}">{{ car.owner.first_name }}</a>{% if car.owner.profile.gender == 'Mężczyzna' %} zadeklarował{% else %} zadeklarowała{% endif %} {{ car.free_chair }} miejsca w swoim aucie.<br>
+                    Rezerwacje: <br>
+                    {% if car.declared.count != 0 %}
+                        {% for declare in car.reserved.all %}
+                            <a class="caption-link btn btn-default" href="{% url 'profile' declare.id %}">{{ declare.first_name }}</a>
+                        {% endfor %}
+                        <br>
+                    {% else %}
+                        Brak<br>
+                    {% endif %}
+                    Pozostało miejsc: {{ car.free_chair|minus:car.reserved.count }}<br>
+                    {% if request.user in car.reserved.all %}
+                        <a class="caption-link btn btn-default" href="{% url 'chair_undeclare' event.id car.id %}">Zwolnij miejsce</a>
+                            {% else %}
+                                {% if car.free_chair|minus:car.reserved.count > 0 %}
+                        <a class="caption-link btn btn-default" href="{% url 'chair_declare' event.id car.id %}">Zarezerwuj miejsce</a>
+                            {% endif %}
+                    <br>
+                    <br>
+                    <hr>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+    <br>
+{% endfor %}
+<br>
+                  <p>Wróć do <a class="caption-link btn btn-default" href="{% url 'dashboard' %}">panelu</a> kursanta.</p>
+
+
+
+{% endblock %}

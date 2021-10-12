@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Lista wydarzeń{% endblock %}
+
+{% block content %}
+                  <h4>Zadeklarowano chęć udziału w {{ event.edition }} Edycji wydarzenia {{ event.name }}</h4>
+                    <p>Tutaj dodatkowe informacje o wydarzeniu, nr konta</p>
+                    <p>Po zaksięgowaniu wpłaty kursantowi zostanie przydzielony dostęp do panelu wydarzenia.</p>
+                  <p>Wróć do <a class="caption-link btn btn-default" href="">panelu</a> kursanta.</p>
+
+
+<br>
+{% endblock %}

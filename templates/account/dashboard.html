@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+
+{% block title %}Panel kursanta{% endblock %}
+
+{% block content %}
+<h4>Panel kursanta</h4>
+<hr>
+<br>
+<p>Witaj w panelu kursanta. Możesz <a href="{% url 'edit' %}" class="caption-link btn btn-default">edytować profil</a> lub <a href="{% url 'password_change' %}" class="caption-link btn btn-default">zmienić hasło</a></p>
+
+<br>
+<h4>Deklaracje złożone:</h4>
+<hr>
+    {% for event in events %}
+        {% if request.user in event.declarations.all %}
+            <p>{{ event.name }} {{ event.edition }}<br>
+{{ event.date }} {{ event.city }}<br>
+<a href="{% url 'event_undeclare' event.id %}" class="caption-link btn btn-default">Anuluj</a></p>
+        {% endif %}
+    {% endfor %}
+<br>
+<br>
+
+<h4>Deklaracje zweryfikowane:</h4>
+<hr>
+<br>
+    {% for event in events %}
+        {% if request.user in event.users.all %}
+            <p>{{ event.name }} - edycja {{ event.edition }}<br>
+                <a href="{% url 'event_news' event.id %}" class="caption-link btn btn-default">Aktualności</a>
+                <a href="{% url 'event_info' event.id %}" class="caption-link btn btn-default">Informacje</a>
+                <a href="{% url 'chat_event_all_message' event.id %}" class="caption-link btn btn-default">Chat</a>
+                <a href="{% url 'event_exit' event.id %}" class="caption-link btn btn-default">Rezygnacja</a></p>
+<br>
+Zarządzanie wspólnym dojazdem na kurs.<br>
+{% if car_exist != 1 %}
+                <a href="{% url 'car_declare' event.id %}" class="caption-link btn btn-default">Udostępnij miejsca</a>
+                <a href="{% url 'set_chair' event.id %}" class="caption-link btn btn-default">Rezerwuj miejsce</a>
+                {% else %}
+                <a href="{% url 'car_panel' carid %}" class="caption-link btn btn-default">Panel Auta</a>
+                {% endif %}
+        {% endif %}
+    {% endfor %}
+<br>
+{% endblock %}

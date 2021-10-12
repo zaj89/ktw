@@ -1,0 +1,11 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Lista wydarzeń{% endblock %}
+
+{% block content %}
+                  <h4>WYcofano deklarację w {{ event.edition }} Edycji wydarzenia {{ event.name }}</h4>
+                  <p>Wróc do <a class="caption-link btn btn-default" href="{% url 'dashboard' %}">panelu</a> kursanta.</p>
+
+
+<br>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+
+{% block title %}Utwórz konto{% endblock %}
+
+{% block content %}
+<h4>Utwórz konto</h4>
+<p>Wypełnij poniższy formularz, aby się zarejestrować.</p>
+<form action="." method="post">
+    {{ user_form.as_p }}
+    {{ profile_form.as_p }}
+    {% csrf_token %}
+    <p><input class="caption-link btn btn-default" type="submit" value="Utwórz konto"></p>
+</form>
+
+{% endblock %}

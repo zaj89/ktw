@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+{% load templatetags %}
+{% load crispy_forms_tags %}
+{% block title %}Zgłoś auto{% endblock %}
+
+{% block content %}
+                  <h4>Panel zarządzania autem.</h4>
+                    <p>Zaoferowałeś {{ car.free_chair }} wolne miejsca.</p>
+                    <p>Osoby, które zadeklarowały chęć zabrania się z Tobą:
+                        {% if car.reserved|length == 0 %}
+                        <br>Brak
+                        {% else %}
+                        <br>{% for userdeclared in car.reserved.all %} <a class="caption-link btn btn-default" href="">{{ userdeclared.first_name }}</a> {% endfor %}
+                        {% endif %}
+                        <br>
+                        <br>
+                        Pozostało wolnych miejsc: {{ car.free_chair|minus:car.reserved.count }}.
+                    </p>
+<hr>
+<br>
+                    <p>
+                        Zgłoszone auto możesz <a class="caption-link btn btn-default" href="{% url 'car_undeclare' car.id %}">wycofać</a>
+                    </p>
+<hr>
+<br>
+                  <p>Wróć do <a class="caption-link btn btn-default" href="{% url 'dashboard' %}">panelu</a> kursanta.</p>
+
+
+
+{% endblock %}

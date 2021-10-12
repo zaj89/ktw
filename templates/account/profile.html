@@ -1,0 +1,11 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edycja kursanta{% endblock %}
+
+{% block content %}
+<h4>Profil kursanta {{ user.username }}</h4>
+    Imię: {{ user.username }}<br>
+    Miasto: {{ user.profile.city }}<br>
+    E-mail: {{ user.email }}<br>
+{% endblock %}

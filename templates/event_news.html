@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+{% block title %}Lista wydarzeń{% endblock %}
+
+{% block content %}
+                  <h4>Komunikaty dotyczące {{ event.edition }} Edycji wydarzenia <br>{{ event.name }}.</h4>
+<hr><br>
+                    {% if news %}
+                        {% for new in news %}
+<h4>{{ new.publicated }}</h4><br>
+<b>{{ new.title }}</b><br>
+                            {{ new.text }}
+                            <center><img class="fotocats img-responsive" width="520" height="391" src="{{ new.image.url }}"></center>
+                        <br>
+<hr>
+                        <br>
+                        {% endfor %}
+                    {% endif %}
+                  <p>Wróc do <a class="caption-link btn btn-default" href="{% url 'dashboard' %}">panelu</a> kursanta.</p>
+
+
+<br>
+{% endblock %}

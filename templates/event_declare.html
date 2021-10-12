@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Lista wydarzeń{% endblock %}
+
+{% block content %}
+                    <form method="POST">
+                        {% csrf_token %}
+        {{ candidate_form|crispy }}
+<input type="submit" value="Zapisz się" class="caption-link btn btn-default"/>
+</form>
+<br>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+<h4>Chat uczestników {{ event.edition }} edycji wydarzenia <br>{{ event.name }}</h4>
+<br>
+<br>
+{% for message in messages %}
+{{ message.created }} <b>{{ message.user.first_name }}: </b>{{ message.comment }}<a href=""><i class="far fa-times-circle"></i></a><br>
+{% endfor %}
+<br>
+<hr>
+<br>
+                    <form method="POST">
+                        {% csrf_token %}
+        {{ message_form|crispy }}
+<input type="submit" value="Wyślij" class="caption-link btn btn-default"/>
+</form>
+<br>
+
+<script>
+    window.setTimeout(function () {
+    location.href = "{% url 'chat_event_all_message' event.id %}";
+}, 30000); // refresh/redirect after 30 seconds.
+</script>
+{% endblock %}
