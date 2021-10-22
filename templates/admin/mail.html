@@ -1,0 +1,21 @@
+{% extends 'admin/panel_admin.html' %}
+
+{% block title %}Wiadomości prywatne{% endblock %}
+{% block panel_admin %}
+<h4>Wiadomości od {{ user.first_name }} {{ user.last_name }}</h4>
+<br>
+<hr>
+<br>
+                    <form method="POST">
+                        {% csrf_token %}
+        {{ message_form|crispy }}
+<input type="submit" value="Wyślij" class="caption-link btn btn-default"/>
+</form>
+<br>
+
+<script>
+    window.setTimeout(function () {
+    location.href = "{% url 'chat_with_admin' request.user.id %}";
+}, 30000); // refresh/redirect after 30 seconds.
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+{% load templatetags %}
+{% load crispy_forms_tags %}
+{% block title %}Zgłoś auto{% endblock %}
+
+{% block content %}
+                  <h4>Panel zarządzania miejscem w aucie.</h4>
+                    <p>Zarezerwowałeś miejsce w samochodzie <a class="caption-link btn btn-default" href="{% url 'profile' car.owner.id %}">{{ car.owner.first_name }}</a>.</p>
+                    <p>Aktualna lista pasażerów:
+                        {% if car.reserved.all|length == 0 %}
+                        <br>Brak
+                        {% else %}
+                        <br>{% for userdeclared in car.reserved.all %} <a class="caption-link btn btn-default" href="{% url 'profile' userdeclared.id %}">{{ userdeclared.first_name }}</a> {% endfor %}
+                        {% endif %}
+                        <br>
+                        <br>
+                        Pozostało wolnych miejsc: {{ car.free_chair|minus:car.reserved.count }}.
+                    </p>
+<hr>
+<br>
+                    <p>
+                        Rezerwację miejsca możesz <a class="caption-link btn btn-default" href="{% url 'chair_undeclare' car.to_event.id car.id %}">wycofać</a>
+                    </p>
+<hr>
+<br>
+                  <p>Wróć do <a class="caption-link btn btn-default" href="{% url 'dashboard' %}">panelu</a> kursanta.</p>
+
+
+
+{% endblock %}

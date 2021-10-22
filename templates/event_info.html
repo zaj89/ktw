@@ -5,6 +5,8 @@
 
 {% block content %}
                   <h4>Szczegółowe informacje na temat wydarzenia <br>{{ event.name }} | {{ event.edition }} Edycja </h4>
+                    <p><img src="{{ event.poster.url }}" border="0" height="400" width="620" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></p>
+<br>
                     <p>{{ event.description }}</p>
 <br>
                     <h4> Uczestnicy na kurs przyjadą z miast:</h4>
@@ -14,52 +16,64 @@
 <br>
 <hr>
 <br>
+{% if request.user in event.users.all %}
 <h4>Ułatwiamy organizowanie wspólnego przyjazdu.</h4><br>
 <p>Jeżeli planujesz jechać samochodem, masz wolne miejsce i chciałabyś komuś pomóc dostać się na kurs to zgłoś swoje auto w panelu kursanta <a href="{% url 'dashboard' %}" class="caption-link btn btn-default">tutaj</a>.<br>
 <br>
     Natomiast jeżeli szukasz miejsca w aucie, aby zabrać się z kimś przejrzyj listę regionów i zgłoszonych aut z wolnymi miejscami poniżej.
 </p>
 <p>
-{% for city in cities %}
-<h4>{{ city }}</h4>
-    {% if cities_cars_len|get_value:city == 0 %}
-        Brak
-    {% endif %}
-            {% for car in cars %}
-                {% if car.owner.profile.city == city %}
-                <br>
-<a class="caption-link btn btn-default" href="{% url 'profile' car.owner.id %}">{{ car.owner.username }}</a>{% if car.owner.profile.gender == 'Mężczyzna' %} zadeklarował{% else %} zadeklarowała{% endif %} {{ car.free_chair }} miejsca w swoim aucie.<br>
-                    Rezerwacje: <br>
-                    {% if car.declared.count != 0 %}
-                        {% for declare in car.reserved.all %}
-                            <a class="caption-link btn btn-default" href="{% url 'profile' declare.id %}">{{ declare.username }}</a>
-                        {% endfor %}
-                        <br>
-                    {% else %}
-                        Brak<br>
-                    {% endif %}
-                    Pozostało miejsc: {{ car.free_chair|minus:car.reserved.count }}<br>
-                    {% if request.user in car.reserved.all %}
-                        <a class="caption-link btn btn-default" href="{% url 'chair_undeclare' event.id car.id %}">Zwolnij miejsce</a>
-                            {% else %}
-                                {% if car.free_chair|minus:car.reserved.count > 0 %}
-                        <a class="caption-link btn btn-default" href="{% url 'chair_declare' event.id car.id %}">Zarezerwuj miejsce</a>
-                            {% endif %}
-                    <br>
-                    <br>
-                    <hr>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-    <br>
-{% endfor %}
-<br>
-                Możesz <a href="{% url 'event_exit' event.id %}" class="caption-link btn btn-default">Zrezygnować</a> z uczestnictwa w wydarzeniu.
 
+    {% for city in cities %}
+    <h4>{{ city }}</h4>
+        {% if cities_cars_len|get_value:city == 0 %}
+            Brak
+
+        {% endif %}
+                {% for car in cars %}
+                    {% if car.owner.profile.city == city %}
+                    <br>
+    <a class="caption-link btn btn-default" href="{% url 'profile' car.owner.id %}">{{ car.owner.username }}</a>{% if car.owner.profile.gender == 'Mężczyzna' %} zadeklarował{% else %} zadeklarowała{% endif %} ilość miejsc w aucie: {{ car.free_chair }}<br>
+                        Rezerwacje: <br>
+                        {% if car.declared.count != 0 %}
+                            {% for declare in car.reserved.all %}
+                                <a class="caption-link btn btn-default" href="{% url 'profile' declare.id %}">{{ declare.username }}</a>
+                            {% endfor %}
+                            <br>
+                        {% else %}
+                            Brak<br>
+                        {% endif %}
+                        Pozostało miejsc: {{ car.free_chair|minus:car.reserved.count }}<br>
+                        {% if request.user in car.reserved.all %}
+                            <a class="caption-link btn btn-default" href="{% url 'chair_undeclare' event.id car.id %}">Zwolnij miejsce</a>
+                                {% else %}
+                                    {% if car.free_chair|minus:car.reserved.count > 0 %}
+                            <a class="caption-link btn btn-default" href="{% url 'chair_declare' event.id  car.id%}">Zarezerwuj miejsce</a>
+                        {% endif %}
+
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+        <br><br><hr>
+    {% endfor %}
+{% else %}
+<p>Po pozytywnym zweryfikowaniu danych i przelewu zostaną tutaj udostępnione funkcje organizacyjne.</p>
+{% endif %}
+<br>
+{% if request.user.is_authenticated %}
+        {% if request.user in event.users.all %}
+                Możesz <a href="{% url 'event_exit' event.id %}" class="caption-link btn btn-default">Zrezygnować</a> z uczestnictwa w kursie.
+        {% else %}
+                {% if request.user in event.declarations.all %}
+                        Możesz <a href="{% url 'event_undeclare' event.id %}" class="caption-link btn btn-default">Zrezygnować</a> z deklaracji uczestnictwa w kursie.
+                {% else %}
+                        Możesz <a href="{% url 'event_declare' event.id %}" class="caption-link btn btn-default">Zapisać się</a> na kurs.
+                {% endif %}
 <br>
 <br>
                   <p>Wróc do <a class="caption-link btn btn-default" href="{% url 'dashboard' %}">panelu</a> kursanta.</p>
 
-
+        {% endif %}
+{% endif %}
 <br>
 {% endblock %}

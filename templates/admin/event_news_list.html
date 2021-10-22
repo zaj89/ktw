@@ -1,0 +1,20 @@
+{% extends 'admin/event.html' %}
+
+{% block title %}Zarządzanie kursami{% endblock %}
+{% block event_element %}
+<h4>Komunikaty dotyczące {{ event.edition }} Edycji wydarzenia <br>{{ event.name }}.</h4>
+<hr><br>
+                    {% if news %}
+                        {% for new in news %}
+<h4>{{ new.title }} <a href="{% url 'admin_event_news_del' event.id new.id  %}" title="Skasuj"><i class="fas fa-times"></i></a>
+                    <a href="{% url 'admin_event_news_edit' event.id new.id %}" title="Edytuj"><i class="fas fa-edit"></i></a>
+</h4>
+
+<b>{{ new.publicated }}</b><br>
+                            {{ new.text }}
+                        <br>
+<hr>
+                        <br>
+                        {% endfor %}
+                    {% endif %}
+{% endblock %}

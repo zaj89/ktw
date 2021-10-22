@@ -50,17 +50,17 @@
                 <ul class="rd-navbar-nav">
                   <li class="active"><a href="{% url 'index' %}">Start</a></li>
                   <li><a href="{% url 'events_list' %}">Zapisz się</a></li>
-                  <li><a href="">Kontakt</a></li>
+                  <li><a href="{% url 'contact' %}">Kontakt</a></li>
                   {% if request.user.is_authenticated %}
                             {% if user.profile.status == 'Administrator' %}
                                  <li><a href="{% url 'panel_admin' %}">Admin</a></li>
                             {% endif %}
                       <li><a href="{% url 'dashboard' %}">{{ request.user.first_name }}</a></li>
-                      <li><a href="{% url 'logout' %}">Wyloguj</a>
+                      <li><a href="{% url 'logout' %}">Wyloguj</a></li>
                     {% else %}
-                    <a href="{% url 'login' %}">Zaloguj</a>
+                    <li><a href="{% url 'login' %}">Zaloguj</a></li>
                     {% endif %}
-                  </li>
+
                 </ul>
               </div>
             </div>
@@ -69,9 +69,19 @@
       </header>
       <!-- Page Content-->
       <div class="range range-xs-center offset-top-0 offset-md-top-65">
-              <div class="cell-md-8 cell-lg-6">
+              <div class="cell-md-8 cell-lg-8">
+                  {% for message in messages %}
+<div class="container-fluid p-0">
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+  </div>
+</div><br>
+{% endfor %}
       {% block content %}
-      <h4>Witaj na stronie Katolickich Warszatatów Tanecznych.</h4>
+                <img src="{% static 'images/background.png' %}" border="0" height="420" width="820" alt="Witaj na stronie Katolickich Warszatatów Tanecznych.">
       {% endblock %}
               </div>
               </div>

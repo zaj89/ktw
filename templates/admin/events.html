@@ -1,0 +1,13 @@
+{% extends 'admin/panel_admin.html' %}
+
+{% block title %}Zarządzanie kursami{% endblock %}
+{% block panel_admin %}
+<h4>Zarządzanie kursami</h4>
+<br>
+<p>Wybierz kurs do zarządzania</p>
+    {% for event in events %}
+        <p>{{ event.edition }} Edycja {{ event.name }} <a href="{% url 'admin_event_detail' event.id %}" class="caption-link btn btn-default">Wybieram</a>
+</p>
+
+    {% endfor %}
+{% endblock %}

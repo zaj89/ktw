@@ -6,9 +6,13 @@
 <h4>Chat uczestników {{ event.edition }} edycji wydarzenia <br>{{ event.name }}</h4>
 <br>
 <br>
-{% for message in messages %}
-{{ message.created }} <b>{{ message.user.first_name }}: </b>{{ message.comment }}<a href=""><i class="far fa-times-circle"></i></a><br>
-{% endfor %}
+{% if messagess %}
+    {% for message in messagess %}
+    {{ message.created }} <b>{{ message.user.first_name }}: </b>{{ message.comment }}{% if request.user.profile.status == 'Administrator' %}<a href="{% url 'admin_chat_event_del_message' event.id message.id %}"><i class="far fa-times-circle"></i></a>{% endif %}<br>
+    {% endfor %}
+{% else %}
+    Brak
+{% endif %}
 <br>
 <hr>
 <br>

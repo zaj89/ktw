@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Weryfikacja{% endblock %}
+
+{% block content %}
+<h4>Weryfikacja deklaracji uczestnictwa w <br>{{ event.edition }} edycji wydarzenia {{ event.name }}</h4>
+{% if event.declarations.all %}
+    {% for declaration in event.declarations.all %}
+<br>
+<b>Login:</b> {{ declaration.username }}, <br><b>Imię:</b> {{ declaration.first_name }}, <br><b>Nazwisko:</b> {{ declaration.last_name }}, <br><b>Miasto:</b> {{ declaration.profile.city }}
+    <br><br>
+
+    {% for candidate in candidates %}
+        {% if candidate.user.id == declaration.id %}
+            <b>Chce uczestniczyć:</b> <br>{{ candidate.type }}<br><br>
+            <b>Skąd dowiedziała się Pani/Pan o Warsztatach (znajomi, jeśli FB to jaka nazwa grupy):</b> <br>{{ candidate.question1 }}<br><br>
+            <b>Miasto, z którego będzie Pan/Pani wyruszać na warsztaty:<br></b> {{ candidate.question2 }}<br><br>
+            <b>Jeśli jedzie Pani/Pan autem, to przez jakie miasta i czy Pani/Pan miałaby/łby wolne miejsca?:</b> <br>{{ candidate.question3 }}<br><br>
+            <b>Czy ma Pani/Pan jakieś doświadczenie taneczne? Jeśli tak, proszę napisać, czy uczestniczył/a Pani/Pan w kursach tańcach, np. poziom P0, P1, P2, jeśli tak to jakich? Czy posiada Pani/Pan klasy taneczne? Czy zaczyna Pani/Pan absolutnie od podstaw? Proszę podać, do jakich szkół tańca Pani/Pan uczęszczał/a oraz staż tańca.:</b> <br>{{ candidate.question4 }}<br><br>
+            <b>Czy wierzy Pani/Pan w Boga i jest Pani/Pan praktykującym katolikiem?:</b> <br>{{ candidate.question5 }}<br><br>
+            <b>Czy należy Pan/Pani do jakiejś wspólnoty? (Jeśli tak, proszę podać nazwę i miasto, w którym odbywają się spotkania.):</b> <br>{{ candidate.question6 }}<br><br>
+            <b>Czy uczestniczył/a Pani/Pan w rekolekcjach? Jeśli tak to jakich?:</b> <br>{{ candidate.question7 }}<br><br>
+            <b>Czy gra Pani / Pan śpiewa lub gra na jakimś instrumencie (gitara, skrzypce etc)?</b> <br>{{ candidate.question8 }}<br><br>
+
+            <a href="{% url 'candidate_acceptance' event.id candidate.user.id %}" class="caption-link btn btn-default">Zaakceptuj</a>
+            <a href="{% url 'reject_candidate' event.id candidate.user.id %}" class="caption-link btn btn-default">Odrzuć</a>
+            <hr size="5px">
+        {% endif %}
+    {% endfor %}
+    {% endfor %}
+{% else %}
+<br>Brak deklaracji
+{% endif %}
+{% endblock %}

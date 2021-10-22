@@ -1,0 +1,17 @@
+{% extends 'admin/panel_admin.html' %}
+
+{% block title %}Zarządzanie kursami{% endblock %}
+{% block panel_admin %}
+<h4>Zarządzanie {{ event.edition }} Edycją kursu {{ event.name }}</h4>
+<br>
+<a href="{% url 'admin_event_edit' event.id %}" class="caption-link btn btn-default">Edycja</a>
+<a href="{% url 'admin_event_declarations' event.id %}" class="caption-link btn btn-default">Wyryfikacja</a>
+<a href="{% url 'admin_event_news' event.id %}" class="caption-link btn btn-default">Komunikaty</a>
+<br>
+<br>
+<hr>
+{% block event_element %}
+{% endblock %}
+{% endblock %}
+
+

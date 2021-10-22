@@ -1,0 +1,23 @@
+{% extends 'admin/panel_admin.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Wyślij wiadomość email do {{ user.first_name }} {{ user.last_name }}{% endblock %}
+{% block panel_admin %}
+<h4>Wyślij wiadomość email do {{ user.first_name }} {{ user.last_name }}</h4>
+
+{% if sent %}
+
+              {% else %}
+
+          <br>
+              <form class="tekst" action="." method="post">
+                  <div class="row">
+
+
+                        {{ form.message|as_crispy_field }}</div>
+                        {% csrf_token %}
+                  <br>
+                  <center><input class="caption-link btn btn-default" type="submit" value="Wyślij wiadomość e-mail"></center>
+              </form>
+              {% endif %}
+{% endblock %}

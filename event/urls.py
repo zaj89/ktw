@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import event_detail, events_list, event_declare, event_undeclare, event_exit, event_info, car_declare, \
-    car_panel, car_undeclare, set_chair, chair_declare, chair_undeclare, event_news, chat_event_all_message
+    car_panel, car_undeclare, set_chair, chair_declare, chair_undeclare, event_news, chat_event_all_message, \
+    admin_chat_event_del_message, admin_verification_declarations, candidate_acceptance, reject_candidate, \
+    chat_with_admin, admin_with_user, admin_chat_priv_del_message, chat_with_admin_del_mess, car_panel_passenger
 
 urlpatterns = [
     path('event_detail/<int:id>/declare', event_declare, name='event_declare'),
@@ -13,8 +15,17 @@ urlpatterns = [
     path('car_declare/<int:id>/', car_declare, name='car_declare'),
     path('car_undeclare/<int:id>/', car_undeclare, name='car_undeclare'),
     path('car_panel/<int:id>', car_panel, name='car_panel'),
+    path('car_panel_passenger/<int:id>', car_panel_passenger, name='car_panel_passenger'),
     path('event_detail/<int:id>/', event_detail, name='event_detail'),
-    path('event_detail/<int:id>/chat', chat_event_all_message, name='chat_event_all_message'),
+    path('event_detail/<int:event_id>/verification_declarations', admin_verification_declarations, name='admin_verification_declarations'),
+    path('event_detail/<int:event_id>/verification_declarations/candidate_acceptance/<int:candidate_id>', candidate_acceptance, name='candidate_acceptance'),
+    path('event_detail/<int:event_id>/verification_declarations/reject_candidate/<int:candidate_id>', reject_candidate, name='reject_candidate'),
+    path('event_detail/<int:id>/chat/', chat_event_all_message, name='chat_event_all_message'),
+    path('event_detail/<int:user_id>/chat_with_admin/del/<int:mes_id>/', chat_with_admin_del_mess, name='chat_with_admin_del_mess'),
+    path('event_detail/<int:id>/chat_with_admin/', chat_with_admin, name='chat_with_admin'),
+    path('event_detail/<int:id>/admin_with_user/', admin_with_user, name='admin_with_user'),
+    path('event_detail/<int:user_id>/admin_with_user/<int:message_id_to_del>', admin_chat_priv_del_message, name='admin_chat_priv_del_message'),
+    path('event_detail/<int:event_id>/chat/<int:message_id_to_del>/', admin_chat_event_del_message, name='admin_chat_event_del_message'),
     path('event_news/<int:id>/', event_news, name='event_news'),
     path('events_list/', events_list, name='events_list'),
 

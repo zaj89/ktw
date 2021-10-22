@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Chat z organizatorem{% endblock %}
+
+{% block content %}
+<h4>Chat z organizatorem {{ event.edition }} edycji wydarzenia <br>{{ event.name }}</h4>
+<br>
+<br>
+{% if messagess %}
+    {% for message in messagess %}
+    {{ message.created }} <b>{% if message.admin %}{{ message.admin.first_name }}{% else %}{{ message.user.first_name }}{% endif %}: </b>{{ message.comment }}{% if request.user.profile.status == 'Administrator' %}<a href="{% url 'chat_with_admin_del_mess' user.id message.id %}"><i class="far fa-times-circle"></i></a>{% endif %}<br>
+    {% endfor %}
+{% else %}
+    Brak
+{% endif %}
+<br>
+<hr>
+<br>
+                    <form method="POST">
+                        {% csrf_token %}
+        {{ message_form|crispy }}
+<input type="submit" value="Wyślij" class="caption-link btn btn-default"/>
+</form>
+<br>
+
+<script>
+    window.setTimeout(function () {
+    location.href = "{% url 'chat_with_admin' request.user.id %}";
+}, 30000); // refresh/redirect after 30 seconds.
+</script>
+{% endblock %}

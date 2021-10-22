@@ -1,0 +1,73 @@
+{% extends 'admin/event.html' %}
+
+{% block title %}Zarządzanie kursami{% endblock %}
+{% block event_element %}
+<br>
+<h4>Liczba i lista oczekujących deklaracji: {{ event.declarations.all|length }}</h4><br>
+<p>{% if event.declarations.all|length > 0 %}
+        <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Login</th>
+      <th scope="col">Imię</th>
+      <th scope="col">Nazwisko</th>
+      <th scope="col">Miasto</th>
+      <th scope="col">Płeć</th>
+      <th scope="col">Telefon</th>
+      <th scope="col">Email</th>
+      <th scope="col">Akcje</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in event.declarations.all %}
+    <tr>
+      <th scope="row">{{ user.username }}</th>
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.last_name }}</td>
+      <td>{{ user.profile.city }}</td>
+      <td>{{ user.profile.gender }}</td>
+      <td>{{ user.profile.phone_number }}</td>
+      <td>{{ user.email }}</td>
+      <td><a href="{% url 'admin_event_declarations_form' event.id user.id %}" title="Zobacz formularz"><i class="fas fa-edit"></i></a>
+          <a href="{% url 'admin_email_to_user' user.id %}" title="Napisz maila"><i class="fas fa-envelope"></i></a>
+          <a href="{% url 'candidate_acceptance' event.id user.id %}" title="Akceptuj"><i class="fas fa-check"></i></a>
+          <a href="{% url 'admin_delete_declaration' event.id user.id %}" title="Odrzuć"><i class="fas fa-times"></i></a></td>
+       </tbody>
+    {% endfor %}
+</table>
+    {% endif %}
+</p><br>
+<p>
+    <h4>Liczba i lista zweryfikowanych uczestników: {{ event.users.all|length }}</h4><br>
+        <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Login</th>
+      <th scope="col">Imię</th>
+      <th scope="col">Nazwisko</th>
+      <th scope="col">Miasto</th>
+      <th scope="col">Płeć</th>
+      <th scope="col">Telefon</th>
+      <th scope="col">Email</th>
+      <th scope="col">Akcje</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in event.users.all %}
+    <tr>
+      <th scope="row">{{ user.username }}</th>
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.last_name }}</td>
+      <td>{{ user.profile.city }}</td>
+      <td>{{ user.profile.gender }}</td>
+      <td>{{ user.profile.phone_number }}</td>
+      <td>{{ user.email }}</td>
+      <td><a href="{% url 'admin_event_declarations_form' event.id user.id %}" title="Zobacz formularz"><i class="fas fa-edit"></i></a>
+          <a href="{% url 'admin_email_to_user' user.id %}" title="Napisz maila"><i class="fas fa-envelope"></i></a>
+          <i class="fas fa-car"></i>
+          <a href="{% url 'admin_delete_user_verified' event.id user.id %}" title="Odrzuć"><i class="fas fa-times"></i></a>
+        </td>
+       </tbody>
+    {% endfor %}
+</table>
+{% endblock %}

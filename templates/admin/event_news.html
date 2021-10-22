@@ -1,0 +1,11 @@
+{% extends 'admin/event.html' %}
+
+{% block title %}Zarządzanie kursami{% endblock %}
+{% block event_element %}
+<br>
+    <h4>Komunikaty wydarzenia:</h4>
+            <a href="{% url 'admin_event_news_list' event.id %}" class="caption-link btn btn-default">Przeglądaj</a>
+            <a href="{% url 'admin_event_news_new' event.id %}" class="caption-link btn btn-default">Napisz</a><br><br>
+    <h4>Napisz wiadomość do:</h4>
+<a href="" class="caption-link btn btn-default">Niezweryfikowanych kursantów</a><br><br>
+{% endblock %}

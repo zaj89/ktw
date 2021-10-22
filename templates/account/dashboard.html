@@ -6,16 +6,21 @@
 <h4>Panel kursanta</h4>
 <hr>
 <br>
-<p>Witaj w panelu kursanta. Możesz <a href="{% url 'edit' %}" class="caption-link btn btn-default">edytować profil</a> lub <a href="{% url 'password_change' %}" class="caption-link btn btn-default">zmienić hasło</a></p>
+<p><a href="{% url 'edit' %}" class="caption-link btn btn-default">edytuj profil</a> <a href="{% url 'password_change' %}" class="caption-link btn btn-default">zmień hasło</a></p>
 
 <br>
-<h4>Deklaracje złożone:</h4>
+<h4>Deklaracje oczekujące:</h4>
 <hr>
     {% for event in events %}
         {% if request.user in event.declarations.all %}
-            <p>{{ event.name }} {{ event.edition }}<br>
-{{ event.date }} {{ event.city }}<br>
-<a href="{% url 'event_undeclare' event.id %}" class="caption-link btn btn-default">Anuluj</a></p>
+<br><h4>{{ event.name }} - edycja {{ event.edition }}</h4>
+{{ event.date }} w {{ event.city }}<br><br>
+<h4>Ważne!</h4>
+Wykonaj przelew na konto <b>{{ event.bank_name }} {{ event.bank_nr|bank_number }}</b> na kwotę <b>{{ price }}zł</b>
+<br>w tytule podając swój <b>login, imię i nazwisko</b>.<br>
+                Organizator po pozytywnem zweryfikowaniu przelewu i formularzu Przyzna dodatkowe uprawnienia do platformy. <br>
+            </p>
+<a href="{% url 'event_undeclare' event.id %}" class="caption-link btn btn-default">Anuluj</a>
         {% endif %}
     {% endfor %}
 <br>
@@ -25,21 +30,30 @@
 <hr>
 <br>
     {% for event in events %}
-        {% if request.user in event.users.all %}
-            <p>{{ event.name }} - edycja {{ event.edition }}<br>
-                <a href="{% url 'event_news' event.id %}" class="caption-link btn btn-default">Aktualności</a>
-                <a href="{% url 'event_info' event.id %}" class="caption-link btn btn-default">Informacje</a>
-                <a href="{% url 'chat_event_all_message' event.id %}" class="caption-link btn btn-default">Chat</a>
-                <a href="{% url 'event_exit' event.id %}" class="caption-link btn btn-default">Rezygnacja</a></p>
-<br>
-Zarządzanie wspólnym dojazdem na kurs.<br>
-{% if car_exist != 1 %}
-                <a href="{% url 'car_declare' event.id %}" class="caption-link btn btn-default">Udostępnij miejsca</a>
-                <a href="{% url 'set_chair' event.id %}" class="caption-link btn btn-default">Rezerwuj miejsce</a>
-                {% else %}
-                <a href="{% url 'car_panel' carid %}" class="caption-link btn btn-default">Panel Auta</a>
-                {% endif %}
+        {% if event.archives == 'Nie' %}
+            {% if request.user in event.users.all %}
+                <h4>{{ event.name }} - edycja {{ event.edition }}<br><br>
+                    <a href="{% url 'event_news' event.id %}" class="caption-link btn btn-default">Komunikaty</a>
+                    <a href="{% url 'event_info' event.id %}" class="caption-link btn btn-default">Informacje ogólne</a><br><br>
+                    <a href="{% url 'chat_event_all_message' event.id %}" class="caption-link btn btn-default">Chat kursantów</a>
+                    <a href="{% url 'chat_with_admin' request.user.id %}" class="caption-link btn btn-default">Chat z organizatorem</a><br><br>
+                    <a href="{% url 'event_exit' event.id %}" class="caption-link btn btn-default">Rezygnacja</a></h4><br><br>
+
+                    <h4>Zarządzanie wspólnym dojazdem.</h4><br>
+                    {% if car_exist == 0 %}
+                    <a href="{% url 'car_declare' event.id %}" class="caption-link btn btn-default">Udostępnij miejsca</a>
+                    <a href="{% url 'set_chair' event.id %}" class="caption-link btn btn-default">Rezerwuj miejsce</a>
+                    {% elif car_exist == 1 %}
+                    <a href="{% url 'car_panel' carid %}" class="caption-link btn btn-default">Panel Auta</a>
+                    {% else %}
+                    <a href="{% url 'car_panel_passenger' carid %}" class="caption-link btn btn-default">Panel Pasażera</a>
+
+                    {% endif %}
+            {% endif %}
+
         {% endif %}
+    <br>
+    <br>
     {% endfor %}
 <br>
 {% endblock %}

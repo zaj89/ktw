@@ -26,11 +26,12 @@
       <td>{{ event.edition }}</td>
       <td>{{ event.city }}</td>
       <td>{{ event.Liczba_Uczestników }} / {{ event.users_limit }}</td>
-      <td>{{ event.declarations.all|length }}</td>
+      <td>{{ event.declarations.all|length }}<br>
+      </td>
       <td><a href="{% url 'event_info' event.id %}"><button class="btn btn-default">Więcej</button></a></td>
       <td>{% if event.registration == 'Otwarta' %}
             {% if request.user in event.declarations.all or request.user in event.users.all %}
-            <a href="{% url 'event_info' event.id %}"><button class="btn btn-default">Jesteś zapisany</button></a>
+            <a href="{% url 'event_info' event.id %}"><button class="btn btn-default">{% if request.user.profile.gender == 'Mężczyzna' %}Jesteś zapisany{% else %}Jesteś zapisana{% endif %}</button></a>
             {% else %}
             <a href="{% url 'event_declare' event.id %}"><button class="btn btn-default">Zapisz się!</button></a>
             {% endif %}

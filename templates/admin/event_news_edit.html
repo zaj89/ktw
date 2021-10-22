@@ -1,0 +1,21 @@
+{% extends 'admin/event.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Zarządzanie kursami{% endblock %}
+{% block event_element %}
+<br>
+<h4>Edytujesz komunikat</h4>
+<form method="post">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-6">
+        {{ event_form.title|as_crispy_field }}
+      </div>
+      <div class="col-6">
+        {{ event_form.text|as_crispy_field }}
+      </div>
+    </div>
+    <br>
+    <button type="submit" class="caption-link btn btn-default">Zapisz zmiany</button>
+  </form>
+{% endblock %}

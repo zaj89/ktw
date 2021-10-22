@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Kontakt{% endblock %}
+
+{% block content %}
+<h4>Formularz kontaktowy z organizatorem.</h4>
+<br>
+
+<hr>
+<br>
+                    <form method="POST">
+                        {% csrf_token %}
+        {{ contact_form|crispy }}
+<input type="submit" value="Wyślij" class="caption-link btn btn-default"/>
+</form>
+<br>
+
+{% endblock %}

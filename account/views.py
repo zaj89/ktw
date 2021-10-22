@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from .forms import LoginForm, UserRegistrationForm, UserEditForm, ProfileEditForm, ProfileRegisterForm
 from django.contrib.auth.decorators import login_required
 from .models import Profile
-from event.models import Event, Car
+from event.models import Event, Car, Candidate
 from django.contrib.auth.models import User
 
 
@@ -30,24 +30,34 @@ def user_login(request):
 
 @login_required
 def dashboard(request):
+    candidate = Candidate.objects.filter(user_id=request.user.id)
     events = Event.objects.all()
     cars = Car.objects.all()
     car_exist = 0
     carid = 0
     lenregevent = 0
     lendecevent = 0
+
+    if candidate:
+        if candidate.get().type == candidate.get().types[0][0]:
+            price = 39
+        else:
+            price = 149
     for car in cars:
         if car.owner.id == request.user.id:
             car_exist = 1
             carid = car.id
-            pass
+        if request.user in car.reserved.all():
+            car_exist = 2
+            carid = car.id
     return render(request, 'account/dashboard.html', {'section': 'dashboard',
                                                       'events': events,
                                                       'cars': cars,
                                                       'car_exist': car_exist,
                                                       'carid': carid,
                                                       'lenregevent': lenregevent,
-                                                      'lendecevent': lendecevent})
+                                                      'lendecevent': lendecevent,
+                                                      'price': price})
 
 
 def register(request):
@@ -59,7 +69,10 @@ def register(request):
             new_user.set_password(user_form.cleaned_data['password'])
             new_user.save()
             new_profile = profile_form.save(commit=False)
-            new_profile = Profile.objects.create(user=new_user, phone_number=new_profile.phone_number)
+            new_profile = Profile.objects.create(user=new_user,
+                                                 phone_number=new_profile.phone_number,
+                                                 city=new_profile.city,
+                                                 gender=new_profile.gender)
             new_profile.save()
             return render(request, 'account/register_done.html', {'new_user': new_user, 'new_profile': new_profile})
     else:

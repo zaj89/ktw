@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Event(models.Model):
@@ -9,11 +10,13 @@ class Event(models.Model):
     edition = models.SmallIntegerField(verbose_name='Edycja')
     city = models.CharField(max_length=30, verbose_name='Miasto')
     date = models.DateField(verbose_name='Data wydarzenia', default=timezone.now)
-    description = models.TextField()
+    description = models.TextField(verbose_name="Opis")
     poster = models.ImageField(blank=True, upload_to='posters/%Y/%m/%d', verbose_name='Plakat')
     users = models.ManyToManyField(User, verbose_name='Uczestnicy zweryfikowani', related_name='verified', blank=True)
     declarations = models.ManyToManyField(User, verbose_name='Deklaracje udziału', related_name='declared', blank=True)
     users_limit = models.SmallIntegerField(verbose_name='Limit uczestników', blank=False, null=False, default=16)
+    bank_name = models.CharField(max_length=30, verbose_name='Nazwa Banku')
+    bank_nr = models.CharField(max_length=24, verbose_name='Numer konta')
     reg = (
         ('Otwarta', 'Otwarta'),
         ('Zamknięta', 'Zamknięta'),
@@ -34,6 +37,7 @@ class Event(models.Model):
 
 class Candidate(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     types = (
         ('Tylko na imprezie integracyjnej od 21:00 do 24:00 (cena 39 zł)',
          'Tylko na imprezie integracyjnej od 21:00 do 24:00 (cena 39 zł)'),
@@ -49,6 +53,9 @@ class Candidate(models.Model):
     question6 = models.TextField(max_length=300, verbose_name='Czy należy Pan/Pani do jakiejś wspólnoty? (Jeśli tak, proszę podać nazwę i miasto, w którym odbywają się spotkania.)')
     question7 = models.TextField(max_length=300, verbose_name='Czy uczestniczył/a Pani/Pan w rekolekcjach? Jeśli tak to jakich?')
     question8 = models.TextField(max_length=300, verbose_name='Czy gra Pani / Pan śpiewa lub gra na jakimś instrumencie (gitara, skrzypce etc)? ')
+
+    def __str__(self):
+        return "Formularz użytkownika {} dla wydarzenia {}".format(self.user, self.event.name)
 
 
 class Car(models.Model):
@@ -66,9 +73,8 @@ class EventNews(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     title = models.CharField(max_length=150, verbose_name='Tytuł')
     text = models.TextField(verbose_name='Treść')
-    image = models.ImageField(blank=True, upload_to='eventnews/%Y/%m/%d', verbose_name='obraz/plakat/zdjecie', null=True)
-    created = models.DateField(verbose_name='Data utworzenia')
-    publicated = models.DateField(verbose_name='Data opublikowania')
+    created = models.DateField(verbose_name='Data utworzenia', auto_now_add=True)
+    publicated = models.DateField(verbose_name='Data opublikowania', auto_now_add=True)
     active = models.BooleanField(default=True)
 
     class Meta:
@@ -90,3 +96,30 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return self.event.name + ' | ' + self.comment
+
+
+class ChatMessageToAdmin(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='usermessage')
+    comment = models.TextField(max_length=300, verbose_name='Wiadomość')
+    created = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='adminmessage', null=True)
+    noreaded = models.BooleanField(verbose_name='Nieprzeczytane', default=True)
+
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return str(self.user.first_name) + ' | ' + str(self.comment)
+
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+    body = models.TextField(max_length=300, verbose_name='Wiadomość')
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return 'Wiadomość wysłana przez{}'.format(self.user.username)

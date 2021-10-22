@@ -41,3 +41,13 @@ class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('gender', 'phone_number', 'city',)
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('gender', 'phone_number', 'city',)
+
+
+class AdminToUserMailForm(forms.Form):
+    message = forms.CharField(widget=forms.Textarea)

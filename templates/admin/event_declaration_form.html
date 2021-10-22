@@ -1,0 +1,26 @@
+{% extends 'admin/event.html' %}
+
+{% block title %}Zarządzanie kursami{% endblock %}
+{% block event_element %}
+<br>
+<h4>Formularz kursanta: {{ user.first_name }} {{ user.last_name }}</h4><br>
+<hr><p><b>Chcę uczestniczyć</b><br>
+    {{ event_form.type }}</p>
+<hr><p><b>Skąd dowiedziała się Pani/Pan o Warsztatach (znajomi, jeśli FB to jaka nazwa grupy)</b><br>
+    {{ event_form.question1 }}</p>
+<hr><p><b>Miasto, z którego będzie Pan/Pani wyruszać na warsztaty</b><br>
+    {{ event_form.question2 }}</p>
+<hr><p><b>Jeśli jedzie Pani/Pan autem, to przez jakie miasta i czy Pani/Pan miałaby/łby wolne miejsca?</b><br>
+    {{ event_form.question3 }}</p>
+<hr><p><b>Czy ma Pani/Pan jakieś doświadczenie taneczne? Jeśli tak, proszę napisać, czy uczestniczył/a Pani/Pan w kursach tańcach, np. poziom P0, P1, P2, jeśli tak to jakich? Czy posiada Pani/Pan klasy taneczne? Czy zaczyna Pani/Pan absolutnie od podstaw? Proszę podać, do jakich szkół tańca Pani/Pan uczęszczał/a oraz staż tańca.</b><br>
+    {{ event_form.question4 }}</p>
+<hr><p><b>Czy wierzy Pani/Pan w Boga i jest Pani/Pan praktykującym katolikiem?</b><br>
+    {{ event_form.question5 }}</p>
+<hr><p><b>Czy należy Pan/Pani do jakiejś wspólnoty? (Jeśli tak, proszę podać nazwę i miasto, w którym odbywają się spotkania.)</b><br>
+    {{ event_form.question6 }}</p>
+<hr><p><b>Czy uczestniczył/a Pani/Pan w rekolekcjach? Jeśli tak to jakich?</b><br>
+    {{ event_form.question7 }}</p>
+<hr><p><b>Czy gra Pani / Pan śpiewa lub gra na jakimś instrumencie (gitara, skrzypce etc)?</b><br>
+    {{ event_form.question8 }}</p>
+
+{% endblock %}

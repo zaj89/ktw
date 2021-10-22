@@ -1,0 +1,13 @@
+{% extends 'admin/event.html' %}
+
+{% block title %}Zarządzanie kursami{% endblock %}
+{% block event_element %}
+<br>
+<form action="." method="post" enctype="multipart/form-data">
+    {{ user_form.as_p }}
+    {{ event_form.as_p }}
+    {% csrf_token %}
+    <p><input class="caption-link btn btn-default" type="submit" value="Zapisz zmiany"></p>
+</form>
+<br>
+{% endblock %}

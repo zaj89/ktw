@@ -1,11 +1,11 @@
 from django import forms
-from .models import Candidate, Car, ChatMessage
+from .models import Candidate, Car, ChatMessage, Contact, Event, ChatMessageToAdmin, EventNews
 
 
 class CandidateForm(forms.ModelForm):
     class Meta:
         model = Candidate
-        exclude = ['user']
+        exclude = ['user', 'event']
 
 
 class CarForm(forms.ModelForm):
@@ -20,7 +20,31 @@ class CarEditForm(forms.ModelForm):
         exclude = ['name', 'owner', 'free_chair', 'to_event']
 
 
+class ChatMessageToAdminForm(forms.ModelForm):
+    class Meta:
+        model = ChatMessageToAdmin
+        fields = ('comment',)
+
+
 class ChatMessageForm(forms.ModelForm):
     class Meta:
         model = ChatMessage
         fields = ('comment',)
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        exclude = ['user', 'created']
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['name', 'edition', 'city', 'date', 'description', 'poster', 'users_limit', 'registration', 'archives']
+
+
+class EventNewsForm(forms.ModelForm):
+    class Meta:
+        model = EventNews
+        exclude = ['event', 'created', 'publicated', 'active']
