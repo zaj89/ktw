@@ -5,7 +5,7 @@
 {% block event_element %}
 <br>
 <h4>Nowy komunikat</h4>
-<form method="post">
+<form method="post" action="{% url 'admin_event_news_list' event.id %}">
     {% csrf_token %}
     <div class="row">
       <div class="col-6">

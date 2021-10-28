@@ -1,16 +1,15 @@
 {% extends 'index.html' %}
 {% load crispy_forms_tags %}
-{% block title %}Chat{% endblock %}
+{% block title %}Chat auta{% endblock %}
 
 {% block content %}
-<h4>Chat uczestników {{ event.edition }} edycji wydarzenia <br>{{ event.name }}</h4>
+<h4>Chat pasażerów auta {{ car.owner.first_name }}</h4>
 <br>
 <br>
 {% if messagess %}
     {% if messagess|length > 10 %}
-        <a href="{% url 'chat_event_10_messages' event.id %}"><button class="btn btn-default">Ukryj starsze</button></a><br><br>
     {% endif %}
-<div class="table-responsive">
+    <div class="table-responsive">
         <table class="table table-hover">
           <tbody>
             {% for message in messagess %}
@@ -22,12 +21,8 @@
           </tbody>
         </table>
 </div>
-        <br>
-
-
-
 {% else %}
-    Brak
+    Brak wiadomości
 {% endif %}
 <br>
 <hr>
@@ -41,7 +36,7 @@
 
 <script>
     window.setTimeout(function () {
-    location.href = "{% url 'chat_event_all_message' event.id %}";
+    location.href = "{% url 'chat_car_all_message' car_chat.car.id %}";
 }, 30000); // refresh/redirect after 30 seconds.
 </script>
 {% endblock %}

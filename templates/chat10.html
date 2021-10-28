@@ -7,10 +7,10 @@
 <br>
 <br>
 {% if messagess %}
-    {% if messagess|length > 10 %}
-        <a href="{% url 'chat_event_10_messages' event.id %}"><button class="btn btn-default">Ukryj starsze</button></a><br><br>
+    {% if messagess_all|length > 10 %}
+        <a href="{% url 'chat_event_all_message' event.id %}"><button class="btn btn-default">Pokaż starsze</button></a><br><br>
     {% endif %}
-<div class="table-responsive">
+    <div class="table-responsive">
         <table class="table table-hover">
           <tbody>
             {% for message in messagess %}
@@ -22,10 +22,6 @@
           </tbody>
         </table>
 </div>
-        <br>
-
-
-
 {% else %}
     Brak
 {% endif %}

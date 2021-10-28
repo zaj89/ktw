@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Profile(models.Model):
@@ -26,3 +28,20 @@ class Profile(models.Model):
 
     def __str__(self):
         return 'Profil kursanta {}.'.format(self.user.username)
+
+
+class Notification(models.Model):
+    #Powiadomienia użytkownika
+    # 1- Komunikat eventu
+    # 2- Wiadomość na Chatcie kursantów
+    # 3- Wiadomość na Chatcie z organizatorem
+    # 4- Deklaracja udziału odrzucona
+    # 5- Deklaracja udziału zaakceptowana
+    # 6- Rezerwacja miejca w Twoim aucie
+    # 7- Rezygnacja z rezerwacji miejsca w Twoim aucie
+    notification_type = models.IntegerField()
+    to_user = models.ForeignKey(User, related_name='notification_to', on_delete=models.CASCADE, null=True)
+    from_user = models.ForeignKey(User, related_name='notification_from', on_delete=models.CASCADE, null=True)
+    comment = models.CharField(max_length=100)
+    date = models.DateTimeField(default=timezone.now)
+    user_has_seen = models.BooleanField(default=False)

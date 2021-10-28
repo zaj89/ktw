@@ -31,6 +31,12 @@ class Event(models.Model):
     def Liczba_Uczestników(self):
         return str(len(self.users.all()))
 
+    def limit_wyczerpany(self):
+        if len(self.declarations.all()) + len(self.users.all()) >= self.users_limit:
+            return True
+        else:
+            return False
+
     def __str__(self):
         return self.name + " " + str(self.edition)
 
@@ -60,7 +66,7 @@ class Candidate(models.Model):
 
 class Car(models.Model):
     name = models.CharField(max_length=30, default='Auto', verbose_name='Nazwa')
-    owner = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Właściciel')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Właściciel')
     free_chair = models.SmallIntegerField(verbose_name='liczba wolnych miejsc')
     reserved = models.ManyToManyField(User, related_name='rezerwacja', blank=True, verbose_name='Rezerwacja')
     to_event = models.ForeignKey(Event, verbose_name='Wydarzenie', on_delete=models.CASCADE)
@@ -123,3 +129,22 @@ class Contact(models.Model):
 
     def __str__(self):
         return 'Wiadomość wysłana przez{}'.format(self.user.username)
+
+
+class CarChat(models.Model):
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='car_chat')
+    users = models.ManyToManyField(User, related_name='car_users')
+
+    def __str__(self):
+        return 'Chat auta {}'.format(self.car.owner.first_name)
+
+
+class CarChatMessage(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='caruser')
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='carmessage')
+    comment = models.TextField(max_length=300, verbose_name='Wiadomość')
+    created = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('created',)

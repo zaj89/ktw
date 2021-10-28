@@ -1,4 +1,5 @@
 {% load static %}
+{% load templatetags %}
 <html class="wide wow-animation" lang="pl">
   <head>
     <!-- Site Title-->
@@ -27,7 +28,7 @@
         <div class="cssload-container">
           <div class="cssload-speeding-wheel"></div>
         </div>
-        <p>Loading...</p>
+        <p>Ładuję...</p>
       </div>
     </div>
     <!-- Page-->
@@ -87,8 +88,8 @@
               </div>
       <!-- Page Footer-->
       <footer class="page-footer">
-        <div class="container"><span>&#169;</span> <span id="copyright-year"></span>
-          <hr class="divider divider-default divider-vertical">
+        <div class="container"><span>Katolickie Warsztaty Taneczne  &#169;</span> <span id="copyright-year"> </span><span> | Maciej Kasprzak</span>
+
         </div>
       </footer>
     </div>
@@ -132,5 +133,6 @@
     <!-- Java script-->
     <script src="{% static 'js/core.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/social.js' %}"></script>
   </body>
 </html>

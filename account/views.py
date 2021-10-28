@@ -33,6 +33,7 @@ def dashboard(request):
     candidate = Candidate.objects.filter(user_id=request.user.id)
     events = Event.objects.all()
     cars = Car.objects.all()
+    price = 0
     car_exist = 0
     carid = 0
     lenregevent = 0
@@ -99,3 +100,9 @@ def edit(request):
 def profile(request, id):
     user = User.objects.get(id=id)
     return render(request, 'account/profile.html', {'user': user})
+
+
+@login_required
+def notifications(request, id):
+    user = User.objects.get(id=id)
+    return render(request, 'account/show_notifications.html', {'user': user})

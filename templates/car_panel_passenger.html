@@ -8,13 +8,18 @@
                     <p>Zarezerwowałeś miejsce w samochodzie <a class="caption-link btn btn-default" href="{% url 'profile' car.owner.id %}">{{ car.owner.first_name }}</a>.</p>
                     <p>Aktualna lista pasażerów:
                         {% if car.reserved.all|length == 0 %}
-                        <br>Brak
+                        <br><span class="caption-link btn btn-default">Brak</span>
                         {% else %}
                         <br>{% for userdeclared in car.reserved.all %} <a class="caption-link btn btn-default" href="{% url 'profile' userdeclared.id %}">{{ userdeclared.first_name }}</a> {% endfor %}
                         {% endif %}
                         <br>
                         <br>
-                        Pozostało wolnych miejsc: {{ car.free_chair|minus:car.reserved.count }}.
+                        Pozostało wolnych miejsc: <span class="caption-link btn btn-default">{{ car.free_chair|minus:car.reserved.count }}</span>.
+                    </p>
+<hr>
+<br>
+                    <p>
+                        Komunikator dla pasażerów <a class="caption-link btn btn-default" href="{% url 'chat_car_all_message' car.id %}">Chat</a>
                     </p>
 <hr>
 <br>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Candidate, Car, ChatMessage, Contact, Event, ChatMessageToAdmin, EventNews
+from .models import Candidate, Car, ChatMessage, Contact, Event, ChatMessageToAdmin, EventNews, CarChatMessage
 
 
 class CandidateForm(forms.ModelForm):
@@ -29,6 +29,12 @@ class ChatMessageToAdminForm(forms.ModelForm):
 class ChatMessageForm(forms.ModelForm):
     class Meta:
         model = ChatMessage
+        fields = ('comment',)
+
+
+class CarChatMessageForm(forms.ModelForm):
+    class Meta:
+        model = CarChatMessage
         fields = ('comment',)
 
 

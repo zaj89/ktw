@@ -5,19 +5,22 @@
 
 {% block content %}
                   <h4>Panel zarządzania autem.</h4>
-                    <p>Zaoferowałeś {{ car.free_chair }} wolne miejsca.</p>
+                    <p>Zaoferowałeś wolnych miejsc: <a class="caption-link btn btn-default">{{ car.free_chair }}</a></p>
                     <p>Osoby, które zadeklarowały chęć zabrania się z Tobą:
-                        {% if car.reserved|length == 0 %}
-                        <br>Brak
+                        {% if car.reserved.all|length == 0 %}
+                        <br><span class="caption-link btn btn-default">Brak</span>
                         {% else %}
-                        <br>{% for userdeclared in car.reserved.all %} <a class="caption-link btn btn-default" href="">{{ userdeclared.first_name }}</a> {% endfor %}
+                        <br>{% for userdeclared in car.reserved.all %} <a class="caption-link btn btn-default" href="{% url 'profile' userdeclared.id %}">{{ userdeclared.first_name }}</a> {% endfor %}
                         {% endif %}
                         <br>
                         <br>
-                        Pozostało wolnych miejsc: {{ car.free_chair|minus:car.reserved.count }}.
+                        Pozostało wolnych miejsc: <span class="caption-link btn btn-default">{{ car.free_chair|minus:car.reserved.count }}</span>.
                     </p>
 <hr>
 <br>
+                    <p>
+                        Komunikator dla pasażerów <a class="caption-link btn btn-default" href="{% url 'chat_car_all_message' car.id %}">Chat</a>
+                    </p>
                     <p>
                         Zgłoszone auto możesz <a class="caption-link btn btn-default" href="{% url 'car_undeclare' car.id %}">wycofać</a>
                     </p>

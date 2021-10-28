@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Event, Car, EventNews, ChatMessage, ChatMessageToAdmin
+from .models import Event, Car, EventNews, ChatMessage, ChatMessageToAdmin, CarChatMessage, CarChat
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from .models import Candidate
-from .forms import CandidateForm, CarForm, CarEditForm, ChatMessageForm, ChatMessageToAdminForm
+from .forms import CandidateForm, CarForm, CarEditForm, ChatMessageForm, ChatMessageToAdminForm, CarChatMessageForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.template.defaulttags import register
@@ -16,6 +16,11 @@ from django.http import HttpResponseRedirect
 @register.filter
 def get_value(dictionary, key):
     return dictionary.get(key)
+
+
+@register.filter
+def plus(one, two):
+    return one + two
 
 
 @register.filter
@@ -48,6 +53,16 @@ def event_news(request, id):
 @login_required
 def event_declare(request, id):
     event = Event.objects.get(id=id)
+    candidate = Candidate.objects.filter(user_id=request.user.id)
+    events = Event.objects.all()
+    cars = Car.objects.all()
+    car_exist = 0
+    carid = 0
+    for car in cars:
+        if car.owner.id == request.user.id:
+            car_exist = 1
+            carid = car.id
+            pass
     if request.user not in event.users.all():
         if request.method == 'POST':
             candidate_form = CandidateForm(data=request.POST)
@@ -61,14 +76,28 @@ def event_declare(request, id):
                 event.save()
                 candidate_form = CandidateForm()
                 messages.success(request, "Deklaracja udziału została wysłana.")
-                return render(request, 'event_declared.html', {'event': event,
-                                                               'candidate_form': candidate_form})
+                return render(request, 'account/dashboard.html', {'event': event,
+                                                                  'candidate_form': candidate_form,
+                                                                  'section': 'dashboard',
+                                                                  'events': events,
+                                                                  'cars': cars,
+                                                                  'car_exist': car_exist,
+                                                                  'carid': carid,
+                                                                  'candidate': candidate
+                                                                  })
         else:
             candidate_form = CandidateForm()
             return render(request, 'event_declare.html', {'event': event,
                                                           'candidate_form': candidate_form})
     else:
-        return render(request, 'event_declared.html', {'event': event})
+        return render(request, 'account/dashboard.html', {'event': event,
+                                                          'section': 'dashboard',
+                                                          'events': events,
+                                                          'cars': cars,
+                                                          'car_exist': car_exist,
+                                                          'carid': carid,
+                                                          'candidate': candidate
+                                                          })
 
 
 @login_required
@@ -91,6 +120,9 @@ def car_declare(request, id):
             new_declare.owner = request.user
             new_declare.to_event = event
             new_declare.save()
+            new_car_chat = CarChat.objects.create(car=new_declare)
+            new_car_chat.users.add(new_declare.owner)
+            new_car_chat.save()
             messages.success(request, "Przyjazd autem został zadeklarowany.")
             events = Event.objects.all()
             cars = Car.objects.all()
@@ -120,7 +152,6 @@ def car_declare(request, id):
 
 @login_required
 def car_undeclare(request, id):
-    candidate = Candidate.objects.filter(user_id=request.user.id)
     candidate = Candidate.objects.filter(user_id=request.user.id)
     Car.objects.filter(id=id).delete()
     messages.success(request, "Zadeklarowane auto zostało wycofane.")
@@ -174,6 +205,10 @@ def chair_declare(request, car_id, eventid):
     user = User.objects.get(id=request.user.id)
     car.reserved.add(user)
     car.save()
+    car_chat = CarChat.objects.get(car=car)
+    car_chat.users.add(user)
+    car_chat.save()
+
     messages.success(request, "Zarezerwowano miejsce w aucie {}.".format(car.owner.first_name))
     return render(request, 'set_chair.html', {'cars': cars,
                                                'event': event,
@@ -208,6 +243,9 @@ def chair_undeclare(request, car_id, eventid):
     user = User.objects.get(id=request.user.id)
     car.reserved.remove(user)
     car.save()
+    car_chat = CarChat.objects.get(car=car)
+    car_chat.users.remove(user)
+    car_chat.save()
     messages.success(request, "Zadeklarowane miejsce zostało zwolnione.")
     return render(request, 'set_chair.html', {'cars': cars,
                                                'event': event,
@@ -257,12 +295,28 @@ def car_panel_passenger(request, id):
 
 @login_required
 def event_undeclare(request, id):
+    events = Event.objects.all()
+    cars = Car.objects.all()
+    car_exist = 0
+    carid = 0
+    for car in cars:
+        if car.owner.id == request.user.id:
+            car_exist = 1
+            carid = car.id
+            pass
     event = Event.objects.get(id=id)
     user_remove = User.objects.get(id=request.user.id)
     event.declarations.remove(user_remove)
     event.save()
+    cars = Car.objects.all()
+    candidate = Candidate.objects.filter(user_id=request.user.id)
     messages.success(request, "Wycofano deklarację udziału w kursie.")
-    return render(request, 'event_undeclared.html', {'event': event})
+    return render(request, 'account/dashboard.html', {'section': 'dashboard',
+                                                      'events': events,
+                                                      'cars': cars,
+                                                      'car_exist': car_exist,
+                                                      'carid': carid,
+                                                      'candidate': candidate})
 
 
 @login_required
@@ -336,7 +390,7 @@ class CandidateCreate(LoginRequiredMixin, CreateView):
 
 
 def chat_event_all_message(request, id):
-    messagess = ChatMessage.objects.filter(active=True, event_id=id).order_by('-created')
+    messagess = ChatMessage.objects.filter(active=True, event_id=id).order_by('created')
     event = Event.objects.get(id=id)
     user = User.objects.get(id=request.user.id)
     if request.method == 'POST':
@@ -353,6 +407,53 @@ def chat_event_all_message(request, id):
         message_form = ChatMessageForm()
     return render(request, 'chat.html', {'event': event,
                                          'messagess': messagess,
+                                         'message_form': message_form
+                                         })
+
+
+def chat_car_all_message(request, car_id):
+    messagess = CarChatMessage.objects.filter(active=True, car_id=car_id).order_by('created')
+    car_chat = CarChat.objects.get(car_id=car_id)
+    car = Car.objects.get(id=car_id)
+    user = User.objects.get(id=request.user.id)
+    if request.method == 'POST':
+        message_form = CarChatMessageForm(data=request.POST)
+        if message_form.is_valid():
+            new_message = message_form.save(commit=False)
+            new_message.car = car
+            new_message.user = user
+            new_message.save()
+            message_form = CarChatMessageForm()
+            messages.success(request, "Wiadomość została wysłana.")
+            return HttpResponseRedirect("chat")
+    else:
+        message_form = CarChatMessageForm()
+    return render(request, 'car_chat.html', {'car_chat': car_chat,
+                                             'messagess': messagess,
+                                             'message_form': message_form
+                                             })
+
+
+def chat_event_10_messages(request, id):
+    messagess = ChatMessage.objects.filter(active=True, event_id=id).order_by('-created')[:10:-1]
+    messagess_all = ChatMessage.objects.filter(active=True, event_id=id).order_by('-created')
+    event = Event.objects.get(id=id)
+    user = User.objects.get(id=request.user.id)
+    if request.method == 'POST':
+        message_form = ChatMessageForm(data=request.POST)
+        if message_form.is_valid():
+            new_message = message_form.save(commit=False)
+            new_message.event = event
+            new_message.user = user
+            new_message.save()
+            message_form = ChatMessageForm()
+            messages.success(request, "Wiadomość została wysłana.")
+            return HttpResponseRedirect(".")
+    else:
+        message_form = ChatMessageForm()
+    return render(request, 'chat10.html', {'event': event,
+                                         'messagess': messagess,
+                                         'messagess_all': messagess_all,
                                          'message_form': message_form
                                          })
 

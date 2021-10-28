@@ -10,22 +10,9 @@
     {% if messagess|length > 10 %}
         <a href="{% url 'chat_event_10_messages' event.id %}"><button class="btn btn-default">Ukryj starsze</button></a><br><br>
     {% endif %}
-<div class="table-responsive">
-        <table class="table table-hover">
-          <tbody>
-            {% for message in messagess %}
-            <tr>
-              <th scope="row" style="text-align:right">{{ message.created }} <b>{{ message.user.first_name }}: </b></th>
-              <td style="text-align:left" width="60%">{{ message.comment }}{% if request.user.profile.status == 'Administrator' %}<a href="{% url 'admin_chat_event_del_message' event.id message.id %}"><i class="far fa-times-circle"></i></a>{% endif %}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-</div>
-        <br>
-
-
-
+    {% for message in messagess %}
+        {{ message.created }} <b>{{ message.user.first_name }}: </b>{{ message.comment }}{% if request.user.profile.status == 'Administrator' %}<a href="{% url 'admin_chat_event_del_message' event.id message.id %}"><i class="far fa-times-circle"></i></a>{% endif %}<br>
+    {% endfor %}
 {% else %}
     Brak
 {% endif %}

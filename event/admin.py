@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Event, Candidate, Car, EventNews, ChatMessage
+from .models import Event, Candidate, Car, EventNews, ChatMessage, CarChat, CarChatMessage
 
 
 @admin.register(Car)
@@ -25,3 +25,5 @@ class CandidateAdmin(admin.ModelAdmin):
 @admin.register(ChatMessage)
 class ChatMessageAdmin(admin.ModelAdmin):
     list_display = ('event', 'user', 'comment', 'created', 'active')
+
+admin.site.register(CarChat)

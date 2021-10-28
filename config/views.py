@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from event.models import Contact, Candidate, ChatMessageToAdmin
 from event.forms import ContactForm, EventForm, EventNewsForm
 from django.contrib.auth.decorators import login_required
-from account.models import Profile
+from account.models import Profile, Notification
 from account.forms import AdminToUserMailForm
 from django.core.mail import send_mail
 from django.contrib import messages
@@ -12,7 +12,9 @@ from django.contrib import messages
 
 def index(request):
     events = Event.objects.all()
-    return render(request, 'index.html', {'events': events})
+    notific = Notification.objects.all()
+    return render(request, 'index.html', {'events': events,
+                                          'notific': notific})
 
 
 @login_required
@@ -120,7 +122,7 @@ def admin_event_news(request, event_id):
 @login_required
 def admin_event_news_list(request, event_id):
     event = Event.objects.get(id=event_id)
-    news = EventNews.objects.filter(event_id=event_id).order_by('-date')
+    news = EventNews.objects.filter(event_id=event_id).order_by('-created')
     if request.method == 'POST':
         event_form = EventNewsForm(request.POST or None)
         if event_form.is_valid():
@@ -140,8 +142,8 @@ def admin_event_news_list(request, event_id):
 @login_required
 def admin_event_news_del(request, event_id, news_id):
     event = Event.objects.get(id=event_id)
-    news = EventNews.objects.filter(event_id=event_id).order_by('-date')
-    new_to_del = news.objects.get(id=news_id)
+    news = EventNews.objects.filter(event_id=event_id).order_by('-created')
+    new_to_del = news.get(id=news_id)
     if request.method == 'POST':
         event_form = EventNewsForm(request.POST or None)
         if event_form.is_valid():
@@ -161,7 +163,7 @@ def admin_event_news_del(request, event_id, news_id):
 @login_required
 def admin_event_news_edit(request, event_id, news_id):
     event = Event.objects.get(id=event_id)
-    news = EventNews.objects.filter(event_id=event_id).order_by('-date')
+    news = EventNews.objects.filter(event_id=event_id).order_by('-created')
     new_to_edit = news.get(id=news_id)
     if request.method == 'POST':
         event_form = EventNewsForm(request.POST)
@@ -180,6 +182,7 @@ def admin_event_news_edit(request, event_id, news_id):
 
 @login_required
 def admin_event_news_new(request, event_id):
+    news = EventNews.objects.filter(event_id=event_id).order_by('-created')
     event = Event.objects.get(id=event_id)
     if request.method == 'POST':
         event_form = EventNewsForm(request.POST, request.FILES)
@@ -188,11 +191,12 @@ def admin_event_news_new(request, event_id):
             new_event.event = event
             new_event.save()
             event_form = EventNewsForm()
-            messages.success(request, "Opublikowane nowy komunikat.")
+            messages.success(request, "Opublikowano nowy komunikat.")
     else:
         event_form = EventNewsForm()
     return render(request, 'admin/event_news_new.html', {'event': event,
                                                          'event_form': event_form,
+                                                         'news': news
                                                          })
 
 
