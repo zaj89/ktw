@@ -3,6 +3,40 @@
 {% block title %}Zarządzanie kursantami{% endblock %}
 {% block panel_admin %}
 <h4>Zarządzanie kursantami</h4>
+<br>
+<h4>Nieprzeczytane wiadomości</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Login</th>
+      <th scope="col">Imię</th>
+      <th scope="col">Nazwisko</th>
+      <th scope="col">Miasto</th>
+      <th scope="col">Płeć</th>
+      <th scope="col">Numer Telefonu</th>
+      <th scope="col">Email</th>
+      <th scope="col">Wykonaj</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    {% if messagess|noreaded:user.id != 0 %}
+    <tr>
+      <th scope="row">{{ user.username }}</th>
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.last_name }}</td>
+      <td>{{ user.profile.city }}</td>
+      <td>{{ user.profile.gender }}</td>
+      <td>{{ user.profile.phone_number }}</td>
+      <td>{{ user.email }}</td>
+      <td><a href="{% url 'admin_email_to_user' user.id %}" title="Napisz maila"><i class="fas fa-envelope"></i></a> <a href="{% url 'admin_with_user' user.id %}" title="Chat"><i class="fas fa-comments"></i></a><span title="Nieprzeczytane wiadomości chatu"> ({{ messages|noreaded:user.id }})</span></td>
+      {% endif %}
+      {% endfor %}
+         </tbody>
+</table>
+<br>
+<br>
+<h4>Wszyscy kursanci</h4>
 
 <table class="table table-striped">
   <thead>
@@ -27,7 +61,7 @@
       <td>{{ user.profile.gender }}</td>
       <td>{{ user.profile.phone_number }}</td>
       <td>{{ user.email }}</td>
-      <td><a href="{% url 'admin_email_to_user' user.id %}"><i class="fas fa-envelope"></i></a> <a href="{% url 'admin_with_user' user.id %}"><i class="fas fa-comments"></i></a> ({{ messages|noreaded:user.id }})</td>
+      <td><a href="{% url 'admin_email_to_user' user.id %}" title="Napisz maila"><i class="fas fa-envelope"></i></a> <a href="{% url 'admin_with_user' user.id %}" title="Chat"><i class="fas fa-comments"></i></a><span title="Nieprzeczytane wiadomości chatu"> ({{ messages|noreaded:user.id }})</span></td>
        </tbody>
 {% endfor %}
 </table>

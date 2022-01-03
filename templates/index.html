@@ -44,14 +44,12 @@
                 <!-- RD Navbar Toggle-->
                 <button class="rd-navbar-toggle" data-rd-navbar-toggle=".rd-navbar-nav-wrap"><span></span></button>
                 <!-- RD Navbar Brand-->
-                <div class="rd-navbar-brand"><a class="brand-name" href="{% url 'index' %}"><img class="img-responsive center-block" src="{% static 'images/logo.png' %}" width="462" height="61" alt=""></a></div>
+                <div class="rd-navbar-brand"><a class="brand-name" href="http://www.katolickiewarsztatytaneczne.pl"><img class="img-responsive center-block" src="{% static 'images/logo.png' %}" width="462" height="61" alt=""></a></div>
               </div>
               <div class="rd-navbar-nav-wrap">
                 <!-- RD Navbar Nav-->
                 <ul class="rd-navbar-nav">
-                  <li class="active"><a href="{% url 'index' %}">Start</a></li>
                   <li><a href="{% url 'events_list' %}">Zapisz się</a></li>
-                  <li><a href="{% url 'contact' %}">Kontakt</a></li>
                   {% if request.user.is_authenticated %}
                             {% if user.profile.status == 'Administrator' %}
                                  <li><a href="{% url 'panel_admin' %}">Admin</a></li>

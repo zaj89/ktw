@@ -1,0 +1,18 @@
+{% extends 'admin/panel_admin.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Tworzenie nowego kursu{% endblock %}
+{% block content %}
+<br>
+<h4>Formularz tworzenia nowego kursu.</h4>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-6">
+        {{ event_form|crispy }}
+      </div>
+    </div>
+    <br>
+    <button type="submit" class="caption-link btn btn-default">Utwórz</button>
+  </form>
+{% endblock %}

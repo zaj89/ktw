@@ -18,7 +18,7 @@ from django.urls import path, include
 from .views import index, panel_admin, contact, admin_users_list, admin_mails, admin_events_list, admin_event_detail, \
     admin_email_to_user, admin_delete_declaration, admin_delete_user_verified, admin_event_edit, \
     admin_event_declarations, admin_event_news, admin_event_news_list, admin_event_declarations_form, \
-    admin_event_news_new, admin_event_news_del, admin_event_news_edit
+    admin_event_news_new, admin_event_news_del, admin_event_news_edit, admin_event_new
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('panel_admin/users/', admin_users_list, name='admin_users_list'),
     path('panel_admin/mails/', admin_mails, name='admin_mails'),
     path('panel_admin/events/', admin_events_list, name='admin_events_list'),
+    path('panel_admin/events/new', admin_event_new, name='admin_event_new'),
     path('panel_admin/event/<int:event_id>/', admin_event_detail, name='admin_event_detail'),
     path('panel_admin/event/<int:event_id>/edit/', admin_event_edit, name='admin_event_edit'),
     path('panel_admin/event/<int:event_id>/declarations/', admin_event_declarations, name='admin_event_declarations'),

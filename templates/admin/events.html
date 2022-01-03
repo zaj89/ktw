@@ -2,11 +2,17 @@
 
 {% block title %}Zarządzanie kursami{% endblock %}
 {% block panel_admin %}
-<h4>Zarządzanie kursami</h4>
+<h4>Stwórz kurs</h4>
+<hr>
 <br>
-<p>Wybierz kurs do zarządzania</p>
+<a href="{% url 'admin_event_new' %}" class="caption-link btn btn-default">Nowy</a>
+<br>
+<br>
+<h4>Zarządzanie kursami</h4>
+<hr>
+<br>
     {% for event in events %}
-        <p>{{ event.edition }} Edycja {{ event.name }} <a href="{% url 'admin_event_detail' event.id %}" class="caption-link btn btn-default">Wybieram</a>
+        <p>{{ event.edition }} Edycja {{ event.name }} <a href="{% url 'admin_event_detail' event.id %}" class="caption-link btn btn-default">Zarządzaj</a>
 </p>
 
     {% endfor %}

@@ -54,10 +54,12 @@ def event_news(request, id):
 def event_declare(request, id):
     event = Event.objects.get(id=id)
     candidate = Candidate.objects.filter(user_id=request.user.id)
+    price = 0
     events = Event.objects.all()
     cars = Car.objects.all()
     car_exist = 0
     carid = 0
+
     for car in cars:
         if car.owner.id == request.user.id:
             car_exist = 1
@@ -70,7 +72,15 @@ def event_declare(request, id):
                 new_declare = candidate_form.save(commit=False)
                 new_declare.user = request.user
                 new_declare.event = event
-                new_declare.save()
+                if len(candidate) > 0:
+                    candidate.delete()
+                else:
+                    new_declare.save()
+                if new_declare:
+                    if new_declare.type == new_declare.types[0][0]:
+                        price = 39
+                    else:
+                        price = 149
                 user_add = User.objects.get(id=request.user.id)
                 event.declarations.add(user_add)
                 event.save()
@@ -83,7 +93,8 @@ def event_declare(request, id):
                                                                   'cars': cars,
                                                                   'car_exist': car_exist,
                                                                   'carid': carid,
-                                                                  'candidate': candidate
+                                                                  'candidate': candidate,
+                                                                  'price': price
                                                                   })
         else:
             candidate_form = CandidateForm()
@@ -96,7 +107,8 @@ def event_declare(request, id):
                                                           'cars': cars,
                                                           'car_exist': car_exist,
                                                           'carid': carid,
-                                                          'candidate': candidate
+                                                          'candidate': candidate,
+                                                          'price': price
                                                           })
 
 
@@ -310,13 +322,13 @@ def event_undeclare(request, id):
     event.save()
     cars = Car.objects.all()
     candidate = Candidate.objects.filter(user_id=request.user.id)
+    candidate.delete()
     messages.success(request, "Wycofano deklarację udziału w kursie.")
     return render(request, 'account/dashboard.html', {'section': 'dashboard',
                                                       'events': events,
                                                       'cars': cars,
                                                       'car_exist': car_exist,
-                                                      'carid': carid,
-                                                      'candidate': candidate})
+                                                      'carid': carid})
 
 
 @login_required
@@ -576,7 +588,7 @@ def admin_chat_priv_del_message(request, user_id, message_id_to_del):
 
 def admin_verification_declarations(request, event_id):
     event = Event.objects.get(id=event_id)
-    candidates = Candidate.objects.all()
+    candidates = Candidate.objects.filter(event_id=event_id)
     return render(request, 'admin/verification_declarations.html', {'event': event,
                                                                     'candidates': candidates})
 

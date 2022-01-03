@@ -47,7 +47,7 @@ class ContactForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'edition', 'city', 'date', 'description', 'poster', 'users_limit', 'registration', 'archives']
+        fields = ['name', 'edition', 'city', 'date', 'description', 'poster', 'users_limit', 'registration', 'archives', 'bank_name', 'bank_nr']
 
 
 class EventNewsForm(forms.ModelForm):

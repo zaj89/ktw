@@ -62,7 +62,7 @@ def admin_event_edit(request, event_id):
     event = Event.objects.get(id=event_id)
     instance = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
-        event_form = EventForm(request.POST or None, instance=instance)
+        event_form = EventForm(request.POST or None, request.FILES or None, instance=instance)
         if event_form.is_valid():
             new_event = event_form.save(commit=False)
             new_event.save()
@@ -78,6 +78,7 @@ def admin_event_edit(request, event_id):
 def admin_event_declarations(request, event_id):
     event = Event.objects.get(id=event_id)
     instance = get_object_or_404(Event, id=event_id)
+    candidates = Candidate.objects.filter(event_id=event_id)
     if request.method == 'POST':
         event_form = EventForm(request.POST or None, instance=instance)
         if event_form.is_valid():
@@ -87,7 +88,8 @@ def admin_event_declarations(request, event_id):
     else:
         event_form = EventForm(request.POST or None, instance=instance)
     return render(request, 'admin/event_declarations.html', {'event': event,
-                                                             'event_form': event_form
+                                                             'event_form': event_form,
+                                                             'candidates': candidates
                                                              })
 
 
@@ -117,6 +119,19 @@ def admin_event_news(request, event_id):
     return render(request, 'admin/event_news.html', {'event': event,
                                                      'event_form': event_form
                                                      })
+
+
+@login_required
+def admin_event_new(request):
+    if request.method == 'POST':
+        event_form = EventForm(request.POST, request.FILES)
+        if event_form.is_valid():
+            new_event = event_form.save(commit=False)
+            new_event.save()
+            messages.success(request, "Wydarzenie zostało utworzone.")
+    else:
+        event_form = EventForm()
+    return render(request, 'admin/event_new.html', {'event_form': event_form})
 
 
 @login_required

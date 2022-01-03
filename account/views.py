@@ -30,7 +30,7 @@ def user_login(request):
 
 @login_required
 def dashboard(request):
-    candidate = Candidate.objects.filter(user_id=request.user.id)
+    candidate = Candidate.objects.filter(user_id=request.user.id)[:1]
     events = Event.objects.all()
     cars = Car.objects.all()
     price = 0

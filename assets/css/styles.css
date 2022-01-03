@@ -1,0 +1,30 @@
+#exLeftColumn{
+    float:left;
+    width:149px;
+    background-color:#00CCFF;
+}
+#exRightColumn{
+    float:right;
+    width:149px;
+    background-color:#CCCCCC;
+}
+.exClear{
+    clear:both;
+    line-height:0px;
+}
+
+.heart {
+position: relative;
+    left: 0px;
+    top: 280px;
+    width: 140px;}
+
+@media (max-width:991px) {
+.heart {
+display:None}
+}
+
+@media (max-width:425px) {
+.logoslist {
+margin: 0 30px;}
+}

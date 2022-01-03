@@ -11,12 +11,12 @@ class Event(models.Model):
     city = models.CharField(max_length=30, verbose_name='Miasto')
     date = models.DateField(verbose_name='Data wydarzenia', default=timezone.now)
     description = models.TextField(verbose_name="Opis")
-    poster = models.ImageField(blank=True, upload_to='posters/%Y/%m/%d', verbose_name='Plakat')
+    poster = models.ImageField(blank=True, upload_to='posters/%Y/%m/%d', verbose_name='Plakat', default='default/background.png')
     users = models.ManyToManyField(User, verbose_name='Uczestnicy zweryfikowani', related_name='verified', blank=True)
     declarations = models.ManyToManyField(User, verbose_name='Deklaracje udziału', related_name='declared', blank=True)
     users_limit = models.SmallIntegerField(verbose_name='Limit uczestników', blank=False, null=False, default=16)
     bank_name = models.CharField(max_length=30, verbose_name='Nazwa Banku')
-    bank_nr = models.CharField(max_length=24, verbose_name='Numer konta')
+    bank_nr = models.CharField(max_length=24, verbose_name='Numer konta', default='')
     reg = (
         ('Otwarta', 'Otwarta'),
         ('Zamknięta', 'Zamknięta'),
@@ -32,9 +32,11 @@ class Event(models.Model):
         return str(len(self.users.all()))
 
     def limit_wyczerpany(self):
-        if len(self.declarations.all()) + len(self.users.all()) >= self.users_limit:
+        if (len(self.declarations.all()) + len(self.users.all())) >= self.users_limit:
+            print((len(self.declarations.all()) + len(self.users.all())) >= self.users_limit)
             return True
         else:
+            print((len(self.declarations.all()) + len(self.users.all())) >= self.users_limit)
             return False
 
     def __str__(self):

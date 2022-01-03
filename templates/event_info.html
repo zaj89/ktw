@@ -5,7 +5,7 @@
 
 {% block content %}
                   <h4>Szczegółowe informacje na temat wydarzenia <br>{{ event.name }} | {{ event.edition }} Edycja </h4>
-                    <p><img src="{{ event.poster.url }}" border="0" height="400" width="620" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></p>
+                    <p><img src="{{ event.poster.url }}" border="0" width="620" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></p>
 <br>
                     <p>{{ event.description }}</p>
 <br>
@@ -57,10 +57,14 @@
         <br><br><hr>
     {% endfor %}
 {% else %}
-<p>Po pozytywnym zweryfikowaniu danych i przelewu zostaną tutaj udostępnione funkcje organizacyjne.</p>
 {% endif %}
 <br>
+
 {% if request.user.is_authenticated %}
+<h4>Zapisy</h4>
+    {% if event.limit_wyczerpany %}
+          <span class="btn btn-default">Limit<br>Wyczerpany</span>
+    {% else %}
         {% if request.user in event.users.all %}
                 Możesz <a href="{% url 'event_exit' event.id %}" class="caption-link btn btn-default">Zrezygnować</a> z uczestnictwa w kursie.
         {% else %}
@@ -74,6 +78,9 @@
                   <p>Wróc do <a class="caption-link btn btn-default" href="{% url 'dashboard' %}">panelu</a> kursanta.</p>
 
         {% endif %}
+    {% endif %}
+{% else %}
+
 {% endif %}
 <br>
 {% endblock %}

@@ -6,45 +6,78 @@
 <h4>Wydarzenia</h4>
                 <br>
 <div class="tekst">
-    <table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Data</th>
-      <th scope="col">Nazwa</th>
-      <th scope="col">Edycja</th>
-      <th scope="col">Miasto</th>
-      <th scope="col">Uczestnicy</th>
-      <th scope="col">Deklaracje</th>
-      <th scope="col">Informacje</th>
-      <th scope="col">Rejestracja</th>
-    </tr>
-  </thead>
-  <tbody>
-{% for event in events %}
-    <tr>
-      <th scope="row">{{ event.date }}</th>
-      <td>{{ event.name }}</td>
-      <td>{{ event.edition }}</td>
-      <td>{{ event.city }}</td>
-      <td>{{ event.Liczba_Uczestników }} / {{ event.users_limit }}</td>
-      <td>{{ event.declarations.all|length }}<br>
-      </td>
-      <td><a href="{% url 'event_info' event.id %}"><button class="btn btn-default">Więcej</button></a></td>
-      <td>{% if event.registration == 'Otwarta' %}
+    {% for event in events %}
+<table class="table table-striped" align="center">
+	<b>{{ event.name }} | Edycja: {{ event.edition }}</b>
+    <tbody>
+	<tr>
+		<td align="center">Data: {{ event.date }}</td>
+		<td align="center">Miasto: {{ event.city }}</td>
+	</tr>
+
+	<tr>
+		<td align="center">Uczestnicy: {{ event.Liczba_Uczestników }} / {{ event.users_limit }}</td>
+		<td align="center">Deklaracje: {{ event.declarations.all|length }}</td>
+	</tr>
+	<tr>
+		<td align="center"><a href="{% url 'event_info' event.id %}"><button class="btn btn-default">Więcej</button></a></td>
+		<td align="center">{% if event.registration == 'Otwarta' %}
             {% if request.user in event.declarations.all or request.user in event.users.all %}
             <a href="{% url 'event_info' event.id %}"><button class="btn btn-default">{% if request.user.profile.gender == 'Mężczyzna' %}Jesteś zapisany{% else %}Jesteś zapisana{% endif %}</button></a>
             {% else %}
-                {% if limit_wyczerpany %}
-                    Limit Wyczerpany
+                {% if event.limit_wyczerpany %}
+          <span class="btn btn-default">Limit<br>Wyczerpany</span>
                 {% else %}
                     <a href="{% url 'event_declare' event.id %}"><button class="btn btn-default">Zapisz się!</button></a>
                 {% endif %}
             {% endif %}
         {% else %}
             Zamknięta
-        {% endif %}</td>
-       </tbody>
-{% endfor %}
+            {% endif %}</td>
+	</tr>
+	</tbody>
 </table>
+    <br>
+    <br>
+    {% endfor %}
+<!--    <table class="table table-striped">-->
+<!--  <thead>-->
+<!--    <tr>-->
+<!--      <th scope="col">Data</th>-->
+<!--      <th scope="col">Nazwa</th>-->
+<!--      <th scope="col">Edycja</th>-->
+<!--      <th scope="col">Miasto</th>-->
+<!--      <th scope="col">Uczestnicy</th>-->
+<!--      <th scope="col">Deklaracje</th>-->
+<!--      <th scope="col">Informacje</th>-->
+<!--      <th scope="col">Rejestracja</th>-->
+<!--    </tr>-->
+<!--  </thead>-->
+<!--  <tbody>-->
+<!--{% for event in events %}-->
+<!--    <tr>-->
+<!--      <th scope="row">{{ event.date }}</th>-->
+<!--        <td>{{ event.name }}</td></tr>-->
+<!--      <td>{{ event.edition }}</td>-->
+<!--      <td>{{ event.city }}</td>-->
+<!--      <td>{{ event.Liczba_Uczestników }} / {{ event.users_limit }}</td>-->
+<!--      <td>{{ event.declarations.all|length }}<br></td>-->
+<!--      <td><a href="{% url 'event_info' event.id %}"><button class="btn btn-default">Więcej</button></a></td>-->
+<!--      <td>{% if event.registration == 'Otwarta' %}-->
+<!--            {% if request.user in event.declarations.all or request.user in event.users.all %}-->
+<!--            <a href="{% url 'event_info' event.id %}"><button class="btn btn-default">{% if request.user.profile.gender == 'Mężczyzna' %}Jesteś zapisany{% else %}Jesteś zapisana{% endif %}</button></a>-->
+<!--            {% else %}-->
+<!--                {% if event.limit_wyczerpany %}-->
+<!--          <span class="btn btn-default">Limit<br>Wyczerpany</span>-->
+<!--                {% else %}-->
+<!--                    <a href="{% url 'event_declare' event.id %}"><button class="btn btn-default">Zapisz się!</button></a>-->
+<!--                {% endif %}-->
+<!--            {% endif %}-->
+<!--        {% else %}-->
+<!--            Zamknięta-->
+<!--        {% endif %}</td>-->
+<!--       </tbody>-->
+<!--{% endfor %}-->
+<!--</table>-->
 </div>
 {% endblock %}

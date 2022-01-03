@@ -3,7 +3,8 @@
 {% block title %}Zarządzanie kursami{% endblock %}
 {% block event_element %}
 <br>
-<h4>Liczba i lista oczekujących deklaracji: {{ event.declarations.all|length }}</h4><br>
+<h4>Oczekujące deklaracje: {{ event.declarations.all|length }}</h4><br>
+
 <p>{% if event.declarations.all|length > 0 %}
         <table class="table table-striped">
   <thead>
@@ -15,6 +16,7 @@
       <th scope="col">Płeć</th>
       <th scope="col">Telefon</th>
       <th scope="col">Email</th>
+      <th scope="col">Do wpłaty</th>
       <th scope="col">Akcje</th>
     </tr>
   </thead>
@@ -28,6 +30,7 @@
       <td>{{ user.profile.gender }}</td>
       <td>{{ user.profile.phone_number }}</td>
       <td>{{ user.email }}</td>
+      <td>{% for candidate in candidates %}{% if candidate.user.id == user.id %}{% if candidate.type == 'Tylko na imprezie integracyjnej od 21:00 do 24:00 (cena 39 zł)' %}39zł{% else %}149zł{% endif %}{% endif %}{% endfor %}</td>
       <td><a href="{% url 'admin_event_declarations_form' event.id user.id %}" title="Zobacz formularz"><i class="fas fa-edit"></i></a>
           <a href="{% url 'admin_email_to_user' user.id %}" title="Napisz maila"><i class="fas fa-envelope"></i></a>
           <a href="{% url 'candidate_acceptance' event.id user.id %}" title="Akceptuj"><i class="fas fa-check"></i></a>
@@ -38,7 +41,7 @@
     {% endif %}
 </p><br>
 <p>
-    <h4>Liczba i lista zweryfikowanych uczestników: {{ event.users.all|length }}</h4><br>
+    <h4>Zweryfikowani uczestnicy: {{ event.users.all|length }}</h4><br>
         <table class="table table-striped">
   <thead>
     <tr>
@@ -49,6 +52,7 @@
       <th scope="col">Płeć</th>
       <th scope="col">Telefon</th>
       <th scope="col">Email</th>
+      <th scope="col">Wpłacone</th>
       <th scope="col">Akcje</th>
     </tr>
   </thead>
@@ -62,6 +66,7 @@
       <td>{{ user.profile.gender }}</td>
       <td>{{ user.profile.phone_number }}</td>
       <td>{{ user.email }}</td>
+      <td>{% for candidate in candidates %}{% if candidate.user.id == user.id %}{% if candidate.type == 'Tylko na imprezie integracyjnej od 21:00 do 24:00 (cena 39 zł)' %}39zł{% else %}149zł{% endif %}{% endif %}{% endfor %}</td>
       <td><a href="{% url 'admin_event_declarations_form' event.id user.id %}" title="Zobacz formularz"><i class="fas fa-edit"></i></a>
           <a href="{% url 'admin_email_to_user' user.id %}" title="Napisz maila"><i class="fas fa-envelope"></i></a>
           <i class="fas fa-car"></i>
@@ -70,4 +75,5 @@
        </tbody>
     {% endfor %}
 </table>
+
 {% endblock %}
